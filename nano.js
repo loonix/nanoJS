@@ -26,24 +26,17 @@ export class Blip {
 }
 
 export function bindTemplate(template, context) {
-    console.log("Binding template with context:", context);
-    return template.replace(/{{(.*?)}}/g, (_, key) => {
-        try {
-            const keys = key.trim().split('.');
-            let value = keys.reduce((acc, k) => acc ? acc[k] : undefined, context);
-
-            // If the value is a Blip, access its .value property
-            if (value instanceof Blip) {
-                value = value.value;
-            }
-
-            console.log(`Binding key: "${key}" with value:`, value);
-            return value !== undefined ? value : '';
-        } catch (error) {
-            console.error(`Error binding template for key: "${key}"`, error);
-            return '';
-        }
+    return template.replace(/\{\{(.*?)\}\}/g, (_, expression) => {
+        const value = resolveNestedValue(expression.trim(), context);
+        return value instanceof Blip ? value.value : value !== undefined ? value : '';
     });
 }
 
-
+function resolveNestedValue(path, context) {
+    return path.split('.').reduce((acc, key) => {
+        if (acc && acc[key] !== undefined) {
+            return acc[key];
+        }
+        return undefined;
+    }, context);
+}

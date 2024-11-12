@@ -1,114 +1,114 @@
 <template>
-    <div>
-      <!-- Display the current title -->
-      <h1>{{title}}</h1>
-  
-      <!-- Input field to change the title dynamically -->
-      <input 
-        type="text" 
-        id="titleInput" 
-        placeholder="Change title" 
-        oninput="updateTitle(event)" 
-        value="{{title}}" 
-      />
-  
-      <!-- Input field to add a new item -->
-      <input 
-        type="text" 
-        id="itemInput" 
-        placeholder="Enter item name" 
-      />
-      <button onclick="addItem()">Add Item</button>
-  
-      <!-- Display list of items with a Remove button -->
-      <loop values="item in items.value">
-        <div>
-          <span>Item: {{item.name}}</span>
-          <button onclick="removeItem({{item.id}})">Remove</button>
-        </div>
-      </loop>
-      
-      <p>Total items: {{items.value.length}}</p>
+    <div class="container">
+        <h1>{{title}}</h1>
+        <input 
+            type="text" 
+            id="titleInput" 
+            placeholder="Change title" 
+            oninput="updateTitle(event)" 
+            value="{{title}}" 
+        />
+        <input 
+            type="text" 
+            id="itemInput" 
+            placeholder="Enter item name" 
+        />
+        <button onclick="addItem()">Add Item</button>
+        <loop values="item in items.value">
+            <div class="item">
+                <span>Item: {{item.name}}</span>
+                <button onclick="removeItem({{item.id}})">Remove</button>
+            </div>
+        </loop>
+        <p>Total items: {{items.value.length}}</p>
     </div>
-  </template>
-  
-  <script>
-    // Initialize the title and items using Blip for reactivity
+</template>
+
+<script>
     const title = new Blip('Hello, NanoJS!');
     const items = new Blip([
-      { id: 1, name: 'Item 1' },
-      { id: 2, name: 'Item 2' }
+        { id: 1, name: 'Item 1' },
+        { id: 2, name: 'Item 2' }
     ]);
-  
-    // Function to update the title without causing a full re-render
+
     window.updateTitle = function(event) {
-      const newValue = event.target.value;
-      
-      // Update the Blip value only if it has changed
-      if (title.value !== newValue) {
-        title.value = newValue;
-        console.log("Title updated:", title.value);
-  
-        // Manually update the input field to avoid losing focus
-        const titleInput = document.getElementById('titleInput');
-        if (titleInput && titleInput !== document.activeElement) {
-          titleInput.focus();
-          titleInput.setSelectionRange(newValue.length, newValue.length);
+        const newValue = event.target.value;
+        if (title.value !== newValue) {
+            title.value = newValue;
+            console.log("Title updated:", title.value);
+            const titleInput = document.getElementById('titleInput');
+            if (titleInput && titleInput !== document.activeElement) {
+                titleInput.focus();
+                titleInput.setSelectionRange(newValue.length, newValue.length);
+            }
         }
-      }
     };
-  
-    // Function to add a new item to the list
+
     window.addItem = function() {
-      const inputElement = document.getElementById('itemInput');
-      const itemName = inputElement.value.trim();
-  
-      if (itemName === '') {
-        alert('Please enter an item name.');
-        return;
-      }
-  
-      const newItem = { 
-        id: Date.now(),
-        name: itemName
-      };
-  
-      // Add the new item to the list
-      items.value = [...items.value, newItem];
-      console.log("Item added. Current items:", items.value);
-  
-      // Clear the input field after adding
-      inputElement.value = '';
+        const inputElement = document.getElementById('itemInput');
+        const itemName = inputElement.value.trim();
+        if (itemName === '') {
+            alert('Please enter an item name.');
+            return;
+        }
+        const newItem = { 
+            id: Date.now(),
+            name: itemName
+        };
+        items.value = [...items.value, newItem];
+        console.log("Item added. Current items:", items.value);
+        inputElement.value = '';
     };
-  
-    // Function to remove an item by its ID
+
     window.removeItem = function(itemId) {
-      items.value = items.value.filter(item => item.id !== itemId);
-      console.log("Item removed. Current items:", items.value);
+        items.value = items.value.filter(item => item.id !== itemId);
+        console.log("Item removed. Current items:", items.value);
     };
-  </script>
-  
-  <style>
+</script>
+
+<style>
+    .container {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
     h1 {
-      color: #007acc;
-      margin-bottom: 20px;
+        color: #333;
+    }
+    input[type="text"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
     }
     button {
-      margin: 5px;
-      padding: 5px 10px;
-      cursor: pointer;
+        padding: 10px 20px;
+        margin: 5px 0;
+        border: none;
+        border-radius: 5px;
+        background-color: #007BFF;
+        color: white;
+        cursor: pointer;
     }
-    input {
-      margin-right: 10px;
-      padding: 5px;
-      width: 200px;
+    button:hover {
+        background-color: #0056b3;
     }
-    div {
-      margin-bottom: 10px;
+    .item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
     }
-    p {
-      font-weight: bold;
-      margin-top: 20px;
+    .item:last-child {
+        border-bottom: none;
     }
-  </style>
-  
+    .item span {
+        flex-grow: 1;
+    }
+</style>
