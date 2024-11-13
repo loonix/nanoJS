@@ -1,0 +1,132 @@
+<template>
+    <div class="login-container">
+        <h2>Login</h2>
+        <input 
+            type="text" 
+            id="usernameInput" 
+            placeholder="Username" 
+            value="{{username.value}}" 
+            oninput="updateUsername(event)"
+        />
+        <input 
+            type="password" 
+            id="passwordInput" 
+            placeholder="Password" 
+            value="{{password.value}}" 
+            oninput="updatePassword(event)"
+        />
+        <button onclick="handleLogin()">Login</button>
+        <p class="message">{{message.value}}</p>
+    </div>
+</template>
+
+<script>
+    // Initialize state variables using Blip
+    const username = new Blip('');
+    const password = new Blip('');
+    const message = new Blip('');
+
+    // Function to update username
+    window.updateUsername = function(event) {
+        username.value = event.target.value;
+    };
+
+    // Function to update password
+    window.updatePassword = function(event) {
+        password.value = event.target.value;
+    };
+
+    // Function to handle login
+    window.handleLogin = function() {
+        const usernameValue = username.value.trim();
+        const passwordValue = password.value.trim();
+
+        if (!usernameValue || !passwordValue) {
+            message.value = 'Please fill in both fields';
+            return;
+        }
+
+        if (usernameValue === 'admin' && passwordValue === 'password') {
+            message.value = 'Login successful!';
+            console.log('Login successful for user:', usernameValue);
+        } else {
+            message.value = 'Invalid username or password';
+        }
+    };
+</script>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        background-color: #f0f2f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .login-container {
+        background-color: #ffffff;
+        max-width: 400px;
+        width: 100%;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 2rem;
+        color: #34495e;
+        margin-bottom: 20px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #dcdfe3;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    button:active {
+        transform: scale(0.98);
+    }
+
+    .message {
+        margin-top: 20px;
+        font-size: 1rem;
+        color: #e74c3c;
+    }
+</style>
